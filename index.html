@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>黑神话悟空 MOD 编辑器</title>
+  <script src="https://bylizn.oss-cn-hangzhou.aliyuncs.com/vue.js"></script>
+  <style>
+    /* 新增文件名输入框样式 */
+    .filename-input {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .filename-hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    /* 添加按钮样式 */
+    .download-btn {
+      background: linear-gradient(135deg, #d4af37 0%, #b58a30 100%);
+      color: #000;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: bold;
+      margin-top: 20px;
+      width: 100%;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .download-btn:active {
+      transform: translateY(1px);
+    }
+
+    body {
+      font-family: 'Microsoft YaHei', sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+    }
+
+    .container {
+      background: #1e1e1e;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      border: 1px solid #3a3a3a;
+    }
+
+    h1 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #d4af37;
+      font-size: 1.1rem;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #3a3a3a;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background: #2a2a2a;
+      color: #f0f0f0;
+      transition: all 0.3s;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+      outline: none;
+    }
+
+    select {
+      height: 48px;
+      background-color: #2a2a2a;
+    }
+
+    .special-hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    .bean-select {
+      margin-top: 15px;
+    }
+
+    .data-display {
+      margin-top: 30px;
+      padding: 20px;
+      background: #1a1a1a;
+      border-radius: 6px;
+      border: 1px solid #3a3a3a;
+    }
+
+    .data-title {
+      color: #d4af37;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #3a3a3a;
+    }
+
+    .data-key {
+      font-weight: bold;
+      color: #aaa;
+    }
+
+    .data-value {
+      color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="container">
+    <h1>黑神话mod编辑器</h1>
+
+    <div class="form-group">
+      <label>寒冻</label>
+      <input type="number" v-model.number="attributes.freeze" placeholder="请输入数值: 关闭输入-1 保持原状输入-2">
+      <div class="special-hint">输入-1关闭，输入-2保持原状</div>
+    </div>
+
+    <div class="form-group">
+      <label>火焚</label>
+      <input type="number" v-model.number="attributes.burn" placeholder="请输入数值: 关闭输入-1 保持原状输入-2">
+      <div class="special-hint">输入-1关闭，输入-2保持原状</div>
+    </div>
+
+    <div class="form-group">
+      <label>雷蛰</label>
+      <input type="number" v-model.number="attributes.thunder" placeholder="请输入数值: 关闭输入-1 保持原状输入-2">
+      <div class="special-hint">输入-1关闭，输入-2保持原状</div>
+    </div>
+
+    <div class="form-group">
+      <label>毒伤</label>
+      <input type="number" v-model.number="attributes.poison" placeholder="请输入数值: 关闭输入-1 保持原状输入-2">
+      <div class="special-hint">输入-1关闭，输入-2保持原状</div>
+    </div>
+
+    <div class="form-group">
+      <label>最大生命值</label>
+      <input type="number" v-model.number="attributes.maxHealth" placeholder="请输入数值">
+    </div>
+
+    <div class="form-group">
+      <label>无限生命</label>
+      <select v-model.number="attributes.currentHealth" class="bean-select">
+        <option value="0">关闭</option>
+        <option value="1">开启</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>攻击力</label>
+      <input type="number" v-model.number="attributes.attack" placeholder="请输入数值">
+    </div>
+    <div class="form-group filename-input">
+      <label>配置脚本文件名</label>
+      <input type="text" v-model="customFileName" placeholder="请输入自定义文件名（不含.bat后缀）" class="bean-select">
+      <div class="filename-hint">
+        提示：不需要输入.bat后缀，系统会自动添加。留空则使用默认名称
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>棍式</label>
+      <select v-model.number="bean" class="bean-select">
+        <option value="-2">不修改</option>
+        <option value="-1">关闭</option>
+        <option value="0">0豆</option>
+        <option value="100">1豆</option>
+        <option value="210">2豆</option>
+        <option value="330">3豆</option>
+        <option value="480">4豆</option>
+      </select>
+    </div>
+
+
+    <div class="data-display">
+      <div class="data-title">当前配置数据</div>
+      <div class="data-row">
+        <span class="data-key">寒冻</span>
+        <span class="data-value">{{ attributes.freeze }}{{getMessage(attributes.freeze)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">火焚</span>
+        <span class="data-value">{{ attributes.burn }}{{getMessage(attributes.burn)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">雷蛰</span>
+        <span class="data-value">{{ attributes.thunder }}{{getMessage(attributes.thunder)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">毒伤</span>
+        <span class="data-value">{{ attributes.poison }}{{getMessage(attributes.poison)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">最大生命值</span>
+        <span class="data-value">{{ attributes.maxHealth }}{{getMessage(attributes.maxHealth)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">无限生命</span>
+        <span class="data-value">{{ attributes.currentHealth }}{{0==attributes.currentHealth?'关闭':'开启'}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">攻击力</span>
+        <span class="data-value">{{ attributes.attack }}{{getMessage(attributes.attack)}}</span>
+      </div>
+      <div class="data-row">
+        <span class="data-key">棍式</span>
+        <span class="data-value">{{ bean }} ({{ getBeanText(bean) }})</span>
+      </div>
+    </div>
+
+    <button @click="downloadBAT" class="download-btn">生成并下载MOD配置脚本</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        attributes: {
+          freeze: -2,
+          burn: -2,
+          thunder: -2,
+          poison: -2,
+          maxHealth: 100,
+          currentHealth: 0,
+          attack: 50
+        },
+        bean: 0,
+        fileInfo: "",
+        customFileName: ''  // 新增自定义文件名数据
+
+      },
+      methods: {
+        getBeanText(value) {
+          const map = new Map([
+            [0, '0豆'],
+            [100, '1豆'],
+            [210, '2豆'],
+            [330, '3豆'],
+            [480, '4豆'],
+            [-2, '不修改'],
+            [-1, '关闭']
+          ]);
+
+          // 强制类型转换 + 安全取值
+          const num = Number(value);
+          return map.has(num) ? map.get(num) : '未知';
+        },
+        getMessage(value) {
+          const map = new Map([
+            [-2, '(不修改)'],
+            [-1, '(关闭)']
+          ]);
+          const num = Number(value);
+          return map.has(num) ? map.get(num) : '';
+        },
+        creatFileInfo() {
+          const item = this.attributes;
+          var info = "@echo off\n" +
+            "setlocal enabledelayedexpansion\n\n";
+          // 寒冻配置
+          if (item.freeze == -1) {
+            info += "for %%f in (*_szHan_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szHan_-1!\"\n\n" +
+              ")\n"
+          } else if (item.freeze != -2) {
+            info += "for %%f in (*_szHan_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szHan_" + item.freeze + "!\"\n\n" +
+              ")\n"
+          }
+          // 火焚配置
+          if (item.burn == -1) {
+            info += "for %%f in (*_szHuo_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szHuo_-1!\"\n\n" +
+              ")\n"
+          } else if (item.burn != -2) {
+            info += "for %%f in (*_szHuo_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szHuo_" + item.burn + "!\"\n\n" +
+              ")\n"
+          }
+          // 雷蛰配置
+          if (item.thunder == -1) {
+            info += "for %%f in (*_szLei_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szLei_-1!\"\n\n" +
+              ")\n"
+          } else if (item.thunder != -2) {
+            info += "for %%f in (*_szLei_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szLei_" + item.thunder + "!\"\n\n" +
+              ")\n"
+          }
+          // 毒伤
+          if (item.poison == -1) {
+            info += "for %%f in (*_szDu_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szDu_-1!\"\n\n" +
+              ")\n"
+          } else if (item.poison != -2) {
+            info += "for %%f in (*_szDu_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_szDu_" + item.poison + "!\"\n\n" +
+              ")\n"
+          }
+          // 最大生命值
+          if (item.maxHealth == -1) {
+            info += "for %%f in (*_maxHP_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_maxHP_-1!\"\n" +
+              ")\n"
+          } else if (item.maxHealth != -2) {
+            info += "for %%f in (*_maxHP_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_maxHP_" + item.maxHealth + "!\"\n\n" +
+              ")\n"
+          }
+          // 无限生命
+          if (item.currentHealth == 0) {
+            info += "for %%f in (*_infHP_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_infHP_0!\"\n\n" +
+              ")\n"
+          } else if (item.currentHealth == 1) {
+            info += "for %%f in (*_infHP_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_infHP_" + item.currentHealth + "!\"\n\n" +
+              ")\n"
+          }
+          // 攻击力
+          if (item.attack == -1) {
+            info += "for %%f in (*_atkBase_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_atkBase_-1!\"\n\n" +
+              ")\n"
+          } else if (item.attack != -2) {
+            info += "for %%f in (*_atkBase_*) do (\n" +
+              "    ren \"%%f\" \"!filename:_atkBase_" + item.attack + "!\"\n\n" +
+              ")\n"
+          }
+          // 棍式
+          if (this.bean == -1) {
+            info += "for %%f in (* _gunshi_*) do (\n" +
+              "    ren \"%%f\" \"!filename: _gunshi_-1!\"\n\n" +
+              ")\n"
+          } else if (this.bean != -2) {
+            info += "for %%f in (* _gunshi_*) do (\n" +
+              "    ren \"%%f\" \"!filename: _gunshi_" + this.bean + "!\"\n\n" +
+              ")\n"
+          }
+          this.fileInfo = info
+          //
+        },
+        downloadBAT() {
+          this.creatFileInfo()
+          const batContent = this.fileInfo;
+          console.log(batContent)
+          // 生成文件名（自动添加.bat后缀）
+          let fileName = this.customFileName.trim();
+
+          // 处理文件名逻辑
+          if (!fileName) {
+            // 默认文件名（带时间戳防止重复）
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            fileName = `黑神话MOD配置脚本.bat`;
+          } else {
+            // 确保文件名以.bat结尾
+            if (!fileName.endsWith('.bat')) {
+              fileName += '.bat';
+            }
+
+            // 替换非法字符（Windows文件名不允许的字符）
+            fileName = fileName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_');
+          }
+
+          // 创建并下载文件
+          const blob = new Blob([batContent], { type: 'application/x-msdos-program' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+
+          // 清理资源
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 100);
+        },
+      }
+    });
+  </script>
+</body>
+
+</html>
